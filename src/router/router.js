@@ -4,11 +4,16 @@ import VueRouter from 'vue-router';
 //注册 vue-router
 Vue.use(VueRouter);
 // 实例化 
+
+
+import login from '../views/login/login.vue';
 const router = new VueRouter({
-    routes: [{
-        path: '/',
-        component: 
-    }, ]
+    routes: [
+        {
+        path: '/login',
+        component: login
+        },
+ ]
 });
 
 // 暴露出去
