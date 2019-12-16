@@ -9,33 +9,32 @@
         <span>用户登录</span>
       </div>
       <div class="login_form">
-        <el-form ref="form" :model="form">
-          <el-form-item>
+        <el-form ref="form" :model="form" :rules="rules">
+          <el-form-item prop="phone">
             <!-- 输入手机号 -->
-            <el-input v-model="form.name" prefix-icon="el-icon-user" placeholder="请输入手机号"></el-input>
+            <el-input v-model="form.phone" prefix-icon="el-icon-user" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <!-- 输入密码 -->
-          <el-form-item>
-            <el-input v-model="form.name" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
+          <el-form-item prop="password">
+            <el-input v-model="form.password" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
           </el-form-item>
           <!-- 输入验证码 -->
           <el-row>
              <el-col :span="18"><div class="grid-content">
-                  <el-form-item>
-            <el-input v-model="form.name" prefix-icon="el-icon-key" placeholder="请输入验证码"></el-input>
+                  <el-form-item prop="captcha">
+            <el-input v-model="form.captcha" prefix-icon="el-icon-key" placeholder="请输入验证码"></el-input>
           </el-form-item></div></el-col>
              <el-col :span="6"><div class="grid-content">
                  <img class="captcha" src="../../assets/captcha.png" alt=""></div></el-col>
           </el-row>
          <!-- 用户协议 -->
           <el-form-item>
-            <el-checkbox-group v-model="form.type">
-              <el-checkbox name="type" class="checkbox">
+              <el-checkbox class="checkbox" v-model="form.checked">
                 我已阅读并同意
                 <el-link type="primary">用户协议</el-link>和
                 <el-link type="primary">隐私条款</el-link>
               </el-checkbox>
-            </el-checkbox-group>
+
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item>
@@ -53,22 +52,63 @@
 <script>
 export default {
   data() {
+    var checkPhone = (rule, value, callback) => {
+      // 手机号码正则校验
+      const phoneNum = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+        if (!value) {
+          // 若为空,结束业务,提示输入手机号
+         return callback(new Error('请输入用户手机号'));
+        } else {
+          // 满足正则验证
+          if (phoneNum.test(value) == true) {
+             callback();
+          }else{
+            // 不满足正则验证
+            callback(new Error('亲,手机号填写错误哟'));
+          }
+        }
+      };
     return {
       form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
-      }
+        phone:"",
+        password:"",
+        captcha:"",
+        // 协议是否勾选
+        checked:false
+      },
+      rules: {
+        // 手机验证规则
+        phone: [
+          { required: true, validator: checkPhone,  trigger: 'blur' }
+        ],
+        // 密码验证规则
+        password: [
+            { required: true, message: '请输入用户密码', trigger: 'blur' },
+            { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'change' }
+          ],
+          // 验证吗验证规则
+        captcha: [
+            { required: true, message: '请输入验证码', trigger: 'blur' },
+            { min: 4, max: 4, message: '验证码长度为4位', trigger: 'change' }
+          ],
+        }
     };
   },
    methods: {
       onSubmit() {
-        window.console.log('submit!');
+       if(this.form.checked == false){
+        //  协议没勾选,提示(饿了么自带的消息提示框)
+        this.$message.warning("亲,请认真阅读协议并勾选哦")
+       }else{
+          this.$refs.form.validate( valid => {
+          if (valid) {
+            this.$message.success("欢迎登录")
+          } else {
+            this.$message.error("内容有误,请重新填写,亲")
+            return false;
+          }
+        });
+       }
       },
       register(){
           
