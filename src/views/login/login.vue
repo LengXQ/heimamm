@@ -129,7 +129,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { sendsms, register } from '../../api/login.js';
 export default {
   data() {
     // 手机号码正则校验
@@ -317,16 +318,23 @@ export default {
             }
           }, 1000);
           // 发送请求,获取动态验证码
-          axios({
-            url: process.env.VUE_APP_BASEURL + '/sendsms',
-            method:'post',
-            // 跨域携带cookie
-            withCredentials: true,
-            data: { 
+          // axios({
+          //   url: process.env.VUE_APP_BASEURL + '/sendsms',
+          //   method:'post',
+          //   // 跨域携带cookie
+          //   withCredentials: true,
+          //   data: { 
+          //     code: this.regform.code,
+          //     phone: this.regform.phone
+          //   },})
+
+          // API抽取
+
+          sendsms({
               code: this.regform.code,
               phone: this.regform.phone
-            },
-          }).then(res=>{
+          })
+          .then(res=>{
             //成功回调
             // window.console.log(res)
             this.$message.success("手机验证码为:" + res.data.data.captcha)
@@ -343,18 +351,30 @@ export default {
       this.$refs.regform.validate(valid => {
         if (valid) {
           // 验证成功后调用注册接口
-          axios({
-            url: process.env.VUE_APP_BASEURL + "/register",
-            method: "post",
-            data: {
+          // axios({
+          //   url: process.env.VUE_APP_BASEURL + "/register",
+          //   method: "post",
+          //   data: {
+          //     username: this.regform.username,
+          //     phone: this.regform.phone,
+          //     email: this.regform.email,
+          //     avatar: this.regform.avatar,
+          //     password: this.regform.password,
+          //     rcode: this.regform.rcode
+          //   }
+          // })
+
+          // api抽取
+
+          register({
               username: this.regform.username,
               phone: this.regform.phone,
               email: this.regform.email,
               avatar: this.regform.avatar,
               password: this.regform.password,
               rcode: this.regform.rcode
-            }
-          }).then(res => {
+          })
+          .then(res => {
             //成功回调
             window.console.log(res);
           });
