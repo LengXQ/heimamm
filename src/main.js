@@ -2,6 +2,9 @@ import Vue from 'vue';
 import App from './App.vue';
 // 导入接收 路由
 import router from './router/router.js';
+// 导入中央仓库
+import store from './store/store.js'
+
 // 导入ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -15,5 +18,7 @@ Vue.config.productionTip = false;
 new Vue({
   // 挂载 router
   router,
+  // 挂载 store
+  store,
   render: h => h(App),
 }).$mount('#app')

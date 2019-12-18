@@ -15,6 +15,8 @@ import { getToken, removeToken } from "../utils/token.js";
 import { Message } from "element-ui";
 // 导入获取登录用户信息接口
 import { userInfo } from '../api/user.js'
+// 导入中央仓库
+import store from '../store/store.js';
 const router = new VueRouter({
     routes: [
         {
@@ -50,7 +52,10 @@ router.beforeEach((to, from, next) => {
         }else{
             // 若有token 则进入页面,并获取登录用户的信息
             userInfo().then((res)=>{
-                 window.console.log(res);
+                //  window.console.log(res);
+                store.state.userInfo = res.data.data;
+                // 用户头像地址不完整,需要自行在前面加上基地址
+                store.state.userInfo.avatar = process.env.VUE_APP_BASEURL + "/" + store.state.userInfo.avatar;
                  if(res.data.code === 200){
                      // token令牌是对的,放行 
                      next();
