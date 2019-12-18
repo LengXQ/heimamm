@@ -130,7 +130,7 @@
 
 <script>
 // import axios from "axios";
-import { sendsms, register } from '../../api/login.js';
+import { login, sendsms, register } from '../../api/login.js';
 export default {
   data() {
     // 手机号码正则校验
@@ -263,7 +263,18 @@ export default {
       } else {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.$message.success("欢迎登录");
+            login({
+              phone: this.form.phone,
+              password:this.form.password,
+              code: this.form.captcha
+            })
+            .then((res)=>{
+              // window.console.log(res)
+              if(res.data.code == 200){
+                this.$router.push("/index");
+                this.$message.success("欢迎登录")
+              }
+            })
           } else {
             this.$message.error("内容有误,请重新填写,亲");
             return false;
