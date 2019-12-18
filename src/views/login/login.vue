@@ -130,6 +130,7 @@
 
 <script>
 // import axios from "axios";
+import {setToken} from '../../utils/token.js'
 import { login, sendsms, register } from '../../api/login.js';
 export default {
   data() {
@@ -274,9 +275,10 @@ export default {
                 this.$router.push("/index");
                 this.$message.success("欢迎登录");
                 // 将token存到本地
-                localStorage.setItem("token",res.data.data.token)
+                // localStorage.setItem("token",res.data.data.token)
+                setToken(res.data.data.token);
               }else if(res.data.code === 202){
-                this.$message.error("res.data.message");
+                this.$message.error(res.data.message);
               }
             })
           } else {
