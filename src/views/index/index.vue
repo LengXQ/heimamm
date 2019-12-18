@@ -7,8 +7,8 @@
         <span class="title">大佬俱乐部</span>
       </div>
       <div class="right">
-          <img src="../../assets/sub_img2.png" alt="">
-          <span class="username">大佬,你好</span>
+          <img class="icon" :src="$store.state.userInfo.avatar" alt="">
+          <span class="username">{{ $store.state.userInfo.username }},你好</span>
            <el-button type="primary" size="small">退出</el-button>
       </div>
     </el-header>
@@ -48,6 +48,7 @@
 export default {
     data() {
         return {
+            // 导航列表伸缩
             isCollapse: false
         }
     },
@@ -103,6 +104,11 @@ body > .el-container {  margin-bottom: 40px; /* 高100百分之百*/ height: 100
             font-size: 14px;
             color: #636363;
             margin: 0 38px 0 9px
+        }
+        .icon{
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
         }
     }
 }
