@@ -270,9 +270,13 @@ export default {
             })
             .then((res)=>{
               // window.console.log(res)
-              if(res.data.code == 200){
+              if(res.data.code === 200){
                 this.$router.push("/index");
-                this.$message.success("欢迎登录")
+                this.$message.success("欢迎登录");
+                // 将token存到本地
+                localStorage.setItem("token",res.data.data.token)
+              }else if(res.data.code === 202){
+                this.$message.error("res.data.message");
               }
             })
           } else {
