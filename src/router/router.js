@@ -7,11 +7,16 @@ Vue.use(VueRouter);
 
 
 import login from '../views/login/login.vue';
+import index from '../views/index/index.vue';
 const router = new VueRouter({
     routes: [
         {
         path: '/login',
         component: login
+        },
+        {
+        path: '/index',
+        component: index
         },
  ]
 });
