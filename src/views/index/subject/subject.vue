@@ -11,19 +11,19 @@
             <el-input v-model="subjectInfo.name" class="even"></el-input>
           </el-form-item>
           <el-form-item label="创建者">
-            <el-input v-model="subjectInfo.author" class="odd"></el-input>
+            <el-input v-model="subjectInfo.username" class="odd"></el-input>
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="subjectInfo.status" placeholder="请选择状态" class="even">
-              <el-option label="启用" value="ON"></el-option>
-              <el-option label="禁用" value="OFF"></el-option>
+              <el-option label="启用" value="1"></el-option>
+              <el-option label="禁用" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">搜索</el-button>
+            <el-button type="primary" @click="getData">搜索</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button>清除</el-button>
+            <el-button @click="clear">清除</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit" class="el-icon-plus">新增学科</el-button>
@@ -42,7 +42,11 @@
           <el-table-column prop="name" label="学科名称"></el-table-column>
           <el-table-column prop="short_name" label="简称"></el-table-column>
           <el-table-column prop="username" label="创建者"></el-table-column>
-          <el-table-column prop="create_time" label="创建日期"></el-table-column>
+          <el-table-column prop="create_time" label="创建日期">
+            <template slot-scope="scope">
+                <span>{{scope.row.create_time | formartTime}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="status" label="状态">
             <template slot-scope="scope">
               <span v-if="scope.row.status === 1">启用</span>
@@ -52,7 +56,10 @@
           <el-table-column prop="operation" label="操作">
             <template slot-scope="scope">
               <el-button type="text" @click="editSubject(scope.row)">编辑</el-button>
-              <el-button type="text" @click="forbiddenSubject(scope.row)">{{ scope.row.status === 1 ? "禁用":"启用"}}</el-button>
+              <el-button
+                type="text"
+                @click="forbiddenSubject(scope.row)"
+              >{{ scope.row.status === 1 ? "禁用":"启用"}}</el-button>
               <el-button type="text" @click="deleteSubject(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -84,9 +91,9 @@
 // 导入新增组件
 import addSubject from "./components/addSubject.vue";
 // 导入编辑组件
-import editSubject from './components/editSubject.vue';
+import editSubject from "./components/editSubject.vue";
 // 导入工具函数
-import { subjectList, subjectChange, subjectRemove } from "../../../api/subject.js";
+import { subjectList, subjectChange, subjectRemove} from "../../../api/subject.js";
 export default {
   name: "subject",
   // 注册组件
@@ -99,7 +106,7 @@ export default {
       subjectInfo: {
         rid: "",
         name: "",
-        author: "",
+        username: "",
         status: ""
       },
       tableData: [],
@@ -121,20 +128,6 @@ export default {
     onSubmit() {
       this.dialogFormVisible = true;
     },
-    // 封装获取数据请求函数
-    getData() {
-      subjectList({
-        limit: this.limit,
-        page: this.page
-        // ...this.subjectInfo,
-      }).then(res => {
-        // window.console.log("获取数据", res);
-        // 将数据返回给table渲染
-        this.tableData = res.data.items;
-        // 总页码
-        this.total = res.data.pagination.total;
-      });
-    },
     // 分页组件
     // 每页显示几条
     handleSizeChange(size) {
@@ -149,31 +142,67 @@ export default {
       this.getData();
     },
     // 改变状态
-    forbiddenSubject(item){
+    forbiddenSubject(item) {
       subjectChange({
-        id:item.id
-      }).then((res)=>{
+        id: item.id
+      }).then(res => {
         // window.console.log(res)
-        if(res.code === 200){
-          this.getData()
+        if (res.code === 200) {
+          this.getData();
         }
-      })
-
+      });
     },
     // 删除学科
-    deleteSubject(item){
-      subjectRemove({
-        id:item.id
-      }).then((res)=>{
-        if(res.code === 200){
-          this.getData()
-        }
+    deleteSubject(item) {
+      this.$confirm("亲，真的要删除吗？", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
+        .then(() => {
+          // 确认删除
+          subjectRemove({
+            id: item.id
+          }).then(res => {
+            if (res.code === 200) {
+              this.getData();
+            }
+          });
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     // 编辑学科
-    editSubject(item){
+    editSubject(item) {
       this.EditFormVisible = true;
-      this.$refs.editSub.editForm = JSON.parse(JSON.stringify(item))
+      this.$refs.editSub.editForm = JSON.parse(JSON.stringify(item));
+    },
+    // 检索学科，获取数据
+    getData() {
+      // window.console.log(this.subjectInfo)
+      subjectList({
+        limit: this.limit,
+        page: this.page,
+        ...this.subjectInfo
+      }).then(res => {
+        // window.console.log("获取数据", res);
+        // 将数据返回给table渲染
+        this.tableData = res.data.items;
+        // 总页码
+        this.total = res.data.pagination.total;
+      });
+    },
+    // 清空条件
+    clear() {
+      this.subjectInfo = {};
     }
   },
   // 进入页面调用

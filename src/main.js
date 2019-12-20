@@ -4,7 +4,8 @@ import App from './App.vue';
 import router from './router/router.js';
 // 导入中央仓库
 import store from './store/store.js'
-
+// 导入时间过滤器
+import "./filters/filter.js"
 // 导入ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
