@@ -4,7 +4,7 @@
       <div class="left">
         <i class="el-icon-s-operation icon" @click="isCollapse = !isCollapse"></i>
         <img class="logo" src="../../assets/index_01.png" alt />
-        <span class="title">大佬俱乐部</span>
+        <span class="title">阳光学校管理系统</span>
       </div>
       <div class="right">
           <img class="icon" :src="$store.state.userInfo.avatar" alt="">
@@ -14,32 +14,33 @@
     </el-header>
     <el-container >
       <el-aside width="auto" class="myContainer">
-    <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo" :collapse="isCollapse">
-      <el-menu-item index="1">
+    <el-menu default-active="/index/chart" class="el-menu-vertical-demo" :collapse="isCollapse" router>
+      <el-menu-item index="/index/chart">
         <i class="el-icon-pie-chart"></i>
         <span slot="title">数据概览</span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="/index/user">
         <i class="el-icon-user"></i>
         <span slot="title">用户列表</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="/index/question">
         <i class="el-icon-edit-outline"></i>
         <span slot="title">题库列表</span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/index/enterprise">
         <i class="el-icon-office-building"></i>
         <span slot="title">企业列表</span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/index/subject">
         <i class="el-icon-notebook-2"></i>
         <span slot="title">学科列表</span>
       </el-menu-item>
     </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+          <!-- 路由出口 -->
+          <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>

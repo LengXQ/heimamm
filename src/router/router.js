@@ -9,6 +9,18 @@ Vue.use(VueRouter);
 import login from '../views/login/login.vue';
 // 导入首页
 import index from '../views/index/index.vue';
+// 导入嵌套页面
+// 数据概览
+import chart from '../views/index/chart/chart.vue'
+// 用户列表
+import user from '../views/index/user/user.vue'
+// 题库列表
+import question from '../views/index/question/question.vue'
+// 企业列表
+import enterprise from '../views/index/enterprise/enterprise.vue'
+// 学科目录
+import subject from '../views/index/subject/subject.vue'
+
 // 导入 token工具函数
 import { getToken, removeToken } from "../utils/token.js";
 // 导入 element-ui的 Message
@@ -21,14 +33,38 @@ const router = new VueRouter({
     routes: [
         {
         path: '/login',
-        component: login
+        component: login,
         },
         {
         path: '/index',
-        component: index
+        component: index,
+        children:[
+            {
+                path: 'chart',
+                component: chart,   
+            },
+            {
+                path: 'user',
+                component: user,   
+            },
+            {
+                path: 'question',
+                component: question,   
+            },
+            {
+                path: 'enterprise',
+                component: enterprise,   
+            },
+            {
+                path: 'subject',
+                component: subject,   
+            },
+        ]
         },
  ]
 });
+
+
 
 
 // 导航守卫

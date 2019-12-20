@@ -5,7 +5,7 @@
       <!-- 表单标题 -->
       <div class="title">
         <img src="../../assets/img.png" alt />
-        <span>大佬俱乐部</span>
+        <span>阳光学校管理系统</span>
         <i></i>
         <span>用户登录</span>
       </div>
